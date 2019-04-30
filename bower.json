@@ -1,0 +1,19 @@
+{
+  "name": "clasebootstrap08",
+  "description": "probando bower",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "3.2.1",
+		"bootstrap": "4.0.0",
+    "popper":"1.12.9"
+  }
+}

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title> HOME </title>
+        <!-- css  4.0 -->
+    <link rel="stylesheet" href="libs/bootstrap/dist/css/bootstrap.min.css">
+    <!--link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"></link-->
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0-rc2/css/bootstrap-glyphicons.css">
+    <link rel="stylesheet" href="libs/css/style.css">
+    
+</head>
+<body background="./fotos/Tu-escritorio-de-trabajo.jpg">
+    <!-- JS -->
+    <script src="./libs/jquery/dist/jquery.slim.min.js"></script>
+    <script src="./libs/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!--script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <!--script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script-->
+    
+    <!-- AGREGO LA LIBRERIA DE JQUERY -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="./js/funciones.js"></script>
+    <script>
+        $(document).ready(function(){
+            Test.Login();   
+        });
+    </script>
+    
+        
+        
+        <div id='divLoguin' class="container centrar  ">            
+            <h1>Login</h1>
+            <div class="row col-centrada ">
+                <div class="form-group container col-lg-12 ">
+                    <label for="inputUsuario" class="control-label">Usuario</label>
+                    <input type="text" class="form-control col-lg-12" id="inputUsuario" placeholder="Usuario" data-error="ojo, revisa Usuario" required>                        
+                </div>
+                <div class="form-group col-centrada col-lg-12 ">
+                    <label for="inputPassword" class="control-label">clave</label>                            
+                    <input type="password" data-minlength="4" data-maxlength="8" class="form-control col-lg-12 " id="inputPassword" placeholder="Password" required>
+                    <div class="help-block">acepta entre   4 a 8  characteres</div>                                          
+                </div>                
+                <div class="form-group col-lg-12">
+                    <button  class="btn btn-primary" onclick="Test.Login()">enviar</button>
+                    <button  class="btn btn-primary">limpiar</button>
+                </div>
+            </div>            
+        </div>
+    </body>
+</html>

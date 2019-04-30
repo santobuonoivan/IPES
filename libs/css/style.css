@@ -1,0 +1,126 @@
+.id{
+  font-size: small;
+}
+.id2{
+  font-size: small;
+}
+.idAlumno{
+  font-size: small;
+}
+.idAlumno2{
+  font-size: small;
+}
+.misTds{
+  font-size: small;
+}
+.miTable{
+  border-collapse: collapse;
+}
+.table1-editable {
+  position: relative;
+}
+.table1-editable .glyphicon {
+  font-size: 20px;
+}
+
+.table1-remove {
+  color: #700;
+  cursor: pointer;
+}
+.table1-remove:hover {
+  color: #f00;
+}
+
+.table1-up, .table1-down {
+  color: #007;
+  cursor: pointer;
+}
+.table1-up:hover, .table1-down:hover {
+  color: #00f;
+}
+.table1-check{
+  color:green ;
+
+}
+.table1-check:hover{
+  color: greenyellow;
+  
+}
+.table1-add {
+  color: #070;
+  cursor: pointer;
+  position: absolute;
+  top: 8px;
+  right: 0;
+}
+
+.table2-remove {
+  color: #700;
+  cursor: pointer;
+}
+.table2-remove:hover {
+  color: #f00;
+}
+
+.table2-up, .table2-down {
+  color: #007;
+  cursor: pointer;
+}
+.table2-up:hover, .table2-down:hover {
+  color: #00f;
+}
+.table2-check{
+  color:green ;
+
+}
+.table2-check:hover{
+  color: greenyellow;
+  
+}
+.table2-add {
+  color: #070;
+  cursor: pointer;
+  position: absolute;
+  top: 8px;
+  right: 0;
+}
+.table2-add:hover {
+  color: #0b0;
+}
+.visible {
+  visibility: visible;
+}
+.invisible {
+  visibility: hidden;
+}
+.centrar {  
+  overflow: hidden;
+  position: absolute;
+  height: auto;
+  width: auto;
+  left: 50%;
+  top: 50%;
+  margin-top: -125px;
+  margin-left: -250px;
+}
+.col-centrada{
+  float: none;
+  margin: 0 auto;
+}
+.opacidad{
+  background-color:white;
+  opacity: 0.93;
+  
+}
+.container-full { 
+  width: 100%;  
+  margin: 0; 
+  padding: 0; 
+}
+.fullWidth {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  
+  max-width: 100%
+}

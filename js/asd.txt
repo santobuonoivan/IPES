@@ -1,0 +1,221 @@
+/*
+            //CREO UNA INSTANCIA DE XMLHTTPREQUEST
+            let xhttp : XMLHttpRequest = new XMLHttpRequest();
+
+            export function ValidarUsuario() {
+                var usuario= $('#usuarioTxt').val();
+                var pass= $('#passTxt').val();
+
+                //METODO; URL; ASINCRONICO?
+                xhttp.open("POST", "./validar.php", true);
+
+                //SETEO EL ENCABEZADO DE LA PETICION	
+                xhttp.setRequestHeader("content-type","application/x-www-form-urlencoded");
+                
+                //ENVIO DE LA PETICION CON LOS PARAMETROS
+                xhttp.send("uss="+usuario+"&pass="+pass);
+
+                //FUNCION CALLBACK
+                xhttp.onreadystatechange = () => {
+                    if (xhttp.readyState == 4 && xhttp.status == 200) {
+                        if (xhttp.responseText === "ok"){
+                            //alert(xhttp.responseText);
+                            (<HTMLDivElement>document.getElementById("DivLoguin")).style.backgroundColor = "green";
+                            //document.body.style.backgroundColor=""
+                        }else{
+                            //alert(xhttp.responseText);
+                            (<HTMLDivElement>document.getElementById("DivLoguin")).style.backgroundColor = "red";
+                        }
+                        
+                    }
+                };
+
+
+
+            }
+            export function TraerTodos()//
+                {
+
+                xhttp.open("POST", "./administrar.php", true);
+                
+                //SETEO EL ENCABEZADO DE LA PETICION	
+                xhttp.setRequestHeader("content-type","application/x-www-form-urlencoded");
+                
+                //ENVIO DE LA PETICION CON LOS PARAMETROS
+                xhttp.send("queHago=todos");
+
+                //FUNCION CALLBACK
+                xhttp.onreadystatechange = () => {
+                    if (xhttp.readyState == 4 && xhttp.status == 200) {
+                        $("#divTest").html(xhttp.responseText);
+                        /*if (xhttp.responseText === "ok"){
+                            //alert(xhttp.responseText);
+                            //(<HTMLDivElement>document.getElementById("DivLoguin")).style.backgroundColor = "green";
+                            //document.body.style.backgroundColor=""
+                        }else{
+                            //alert(xhttp.responseText);
+                            //(<HTMLDivElement>document.getElementById("DivLoguin")).style.backgroundColor = "red";
+                        }*/
+                        /*
+                    }
+                };
+            }
+            export function cargarUsuarios() {
+                var url="http://localhost/tp/v2/ipes/uss/";
+                xhttp.open("GET", url, true);
+                
+                //SETEO EL ENCABEZADO DE LA PETICION	
+                xhttp.setRequestHeader("content-type","application/x-www-form-urlencoded");
+                
+                //ENVIO DE LA PETICION CON LOS PARAMETROS
+                xhttp.send("");
+
+                //FUNCION CALLBACK
+                xhttp.onreadystatechange = () => {
+                    if (xhttp.readyState == 4 && xhttp.status == 200) {
+                        $("#divTest").html(xhttp.response);
+                        /*if (xhttp.responseText === "ok"){
+                            //alert(xhttp.responseText);
+                            //(<HTMLDivElement>document.getElementById("DivLoguin")).style.backgroundColor = "green";
+                            //document.body.style.backgroundColor=""
+                        }else{
+                            //alert(xhttp.responseText);
+                            //(<HTMLDivElement>document.getElementById("DivLoguin")).style.backgroundColor = "red";
+                        }*//*
+                        
+                    }
+                };
+            }
+            export function ValidarCamposVacios(id:string):boolean {
+                return ValidarCombo(id,"");   
+            }
+            export function ValidarCombo(id:string, valError:string): boolean{
+                if((<HTMLInputElement> document.getElementById(id)).value !==valError){
+                    //AdministrarSpanError(id,true);
+                    return true;
+                    }
+                //AdministrarSpanError(id,false);
+                return false;    
+            }
+            export function ObtenerTurnoSeleccionado():string{
+                let turno:string = "";
+                if ((<HTMLInputElement> document.getElementById('0')).checked) {
+                        turno=(<HTMLInputElement> document.getElementById('0')).value;
+                    }else if ((<HTMLInputElement> document.getElementById('1')).checked) {
+                        turno=(<HTMLInputElement> document.getElementById('1')).value;        
+                        }else if ((<HTMLInputElement> document.getElementById('2')).checked) {
+                    turno=(<HTMLInputElement> document.getElementById('2')).value;
+                    
+                }
+                
+                //let onselect:any = turno.onselect();
+                return turno;
+            }
+            export function ObtenerSueldoMaximo(t:string):number{
+                let sueldo:number=0;
+                
+                if (t=="0") {
+                    //mañana
+                    //(<HTMLInputElement> document.getElementById("sueldoTxt")).max=20000;
+                    sueldo=20000;
+                }else if (t=="1") {
+                        //tarde
+                        sueldo=18500;
+                    
+                    } else if (t=="2") {
+                    //noche
+                    sueldo=25000;
+                        }
+                //console.log("valor: "+t);
+                return sueldo;
+
+            }
+            export function cambiarSueldoMax():void {
+                (<HTMLInputElement> document.getElementById("sueldoTxt")).max=ObtenerSueldoMaximo(ObtenerTurnoSeleccionado()).toString();
+                
+            }
+            export function ValidarRangoNumerico(num:number,min:number,max:number):boolean {
+                return  (num >= min && num <= max);
+            }
+            export function AdministrarSpanError(campo:string,bool:boolean) {
+                if(!bool){
+                    (<HTMLSpanElement> document.getElementById(campo)).style.display ="block";
+                }else{
+                    (<HTMLSpanElement> document.getElementById(campo)).style.display ="none";
+                }
+            }
+            export function enviar():boolean {    
+                if (!ValidarCamposVacios('dniTxt')) {
+                    AdministrarSpanError('dniSpan',false);
+                    //alert("Complete el campo DNI");
+                    return false;            
+                }
+                if (!ValidarCamposVacios('apellidoTxt')) {
+                    AdministrarSpanError('apellidoSpan',false);
+                    //alert("Complete el campo APELLIDO");
+                    return false;
+                }
+                if (!ValidarCamposVacios('nombreTxt')) {
+                    AdministrarSpanError('nombreSpan',false);
+                    //alert("Complete el campo NOMBRE"); 
+                    return false;  
+                }
+                if (!ValidarCamposVacios('legajoTxt')) {
+                    AdministrarSpanError('legajoSpan',false);
+                    //alert("Complete el campo LAGAJO"); 
+                    return false;  
+                }
+                if (!ValidarCombo('comboBoxSexo', "---")) {
+                    AdministrarSpanError('sexoSpan',false);
+                    //alert("ELIJA un SEXO");
+                    return false;
+                }
+                if (!ValidarCamposVacios('sueldoTxt')) {
+                    AdministrarSpanError('sueldoSpan',false);
+                    //alert("Complete el campo SUELDO"); 
+                    return false;  
+                }
+                if((<HTMLInputElement> document.getElementById("archivos")).value == ""){
+                    AdministrarSpanError("filesSpan",false);
+                    return false;
+                    }
+                //AdministrarSpanError(id,false);
+                
+                return true;
+            }    
+            export function AdministrarValidacionesLogin() {
+
+                if (!ValidarCamposVacios('dniTxt')) {
+                    AdministrarSpanError('dniSpan',false);
+                    //alert("Complete el campo DNI");
+                    return false;             
+                    }else{
+                    AdministrarSpanError('dniSpan',true);
+                }
+                if (!ValidarCamposVacios('apellidoTxt')) {
+                    AdministrarSpanError('apellidoSpan',false);
+                    //alert("Complete el campo DNI");
+                    return false;             
+                    }else{
+                    AdministrarSpanError('apellidoSpan',true);
+                }
+                if (!ValidarRangoNumerico(parseInt((<HTMLInputElement> document.getElementById("dniTxt")).value),1000000,55000000)) {
+                    return false;
+                }
+            }
+            export function VerificarValidacionesLogin():boolean {
+                AdministrarValidacionesLogin();
+                let spanDni = (<HTMLSpanElement> document.getElementById('dniSpan')).style.display !=="block";
+                let spanApellido = (<HTMLSpanElement> document.getElementById('apellidoSpan')).style.display !=="block";
+                if( spanDni && spanApellido){
+                    return true;
+                }
+                return false;
+            }
+            export function AdministrarModificar(dni:string) {
+                //(<HTMLInputElement>document.getElementById("hiddenField")).value=dni;
+                return '<input type="hidden" name="hiddenInp" value="'+dni+'" id = "hiddenField">'
+            }
+
+            
+        */
