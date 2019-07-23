@@ -1,0 +1,12 @@
+{
+    "name": "ivan-santobuono/ipes",
+    "authors": [
+        {
+            "name": "santobuonoivan",
+            "email": "mecaluxivansantobuono@gmail.com"
+        }
+    ],
+    "require": {
+        "twig/twig": "^2.0"
+    }
+}

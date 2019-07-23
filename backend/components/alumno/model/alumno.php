@@ -336,6 +336,7 @@ class Alumno implements IPersona
 		return $response->withJson($objDelaRespuesta, 200);		
 	}
 	public function deudaAlumno($request, $response, $args) {
+	    /* TODO controller y view */
 		$argumentos=$request->getParsedBody();		
 		$alumno = new Alumno();
         $alumno->id=$argumentos['id'];

@@ -19,6 +19,16 @@ require_once './clases/Form.php';
 $config['displayErrorDetails'] = true;
 $config['addContentLengthHeader'] = false;
 
+$loader = new \Twig\Loader\ArrayLoader([
+    'index' => 'Hello {{ name }}!',
+]);
+$twig = new \Twig\Environment($loader);
+
+/*
+ * usage
+ * echo $twig->render('index.html', ['name' => 'Fabien']);
+ */
+
 /*
 ¡La primera línea es la más importante! A su vez en el modo de 
 desarrollo para obtener información sobre los errores
