@@ -1,9 +1,6 @@
-///<reference path="../libs/jqueryTS/index.d.ts"/>
-///<reference path="../libs/chartsTS/charts.d.ts"/>
-
-namespace Test{
+/// <reference path="./../node_modules/@types/jquery/index.d.ts"/>
     
-    
+    namespace Test{
     /********************************************** GRILLAS *************************************************/    
         export function grillaUsuarios():void {
             let pagina = "backend/uss/todos";
@@ -1557,23 +1554,29 @@ namespace Test{
                                 "tokken": tokken,
                                 "detalle" : detalle
             };
-            $.ajax({
-                type: 'POST',
-                url: pagina,
-                dataType: "json",
-                data : datoObjeto,
-                async: true
-            })
-            .done(function (objJSON):void {
-                console.log(objJSON);
-                if(objJSON.respuesta){
-                    localStorage.setItem('tokken',objJSON.token);
-                    location.href ="/tp/v2/asd/";//carpetas que uso
-                }                
-            })
-            .fail(function (jqXHR:any, textStatus:any, errorThrown:any) {
-                alert(jqXHR.responseText + "\n" + textStatus + "\n" + errorThrown);
-            });
+
+            if (usuario ==='' && clave ==='' && tokken ===null) {
+                return;
+            }else{
+                $.ajax({
+                    type: 'POST',
+                    url: pagina,
+                    dataType: "json",
+                    data : datoObjeto,
+                    async: true
+                })
+                .done(function (objJSON):void {
+                    console.log(objJSON);
+                    
+                    if(objJSON.respuesta){
+                        localStorage.setItem('tokken',objJSON.token);
+                        location.href ="/IPES";//carpetas que uso
+                    }                
+                })
+                .fail(function (jqXHR:any, textStatus:any, errorThrown:any) {
+                    alert(jqXHR.responseText + "\n" + textStatus + "\n" + errorThrown);
+                });
+            }
         }
         export function Logout():void{
             let pagina = "backend/login/salir";            
@@ -1612,6 +1615,7 @@ namespace Test{
         // traer tdo de una caja entradas y salidas
         //export function TraerTodoParaUnaCajaPor
         //yapa
+        /*
         export function Estadisticas():void{
             $('#divRespuesta').html("");
             let pagina = "backend/caja/Estadisticas";
@@ -1677,6 +1681,7 @@ namespace Test{
             alert(jqXHR.responseText + "\n" + textStatus + "\n" + errorThrown);
             });
         }
+        */
         /******validaciones********************************/
         export function validarInputs(params:any) {
             let fieldType = params.type;

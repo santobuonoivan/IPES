@@ -1,6 +1,4 @@
-"use strict";
-///<reference path="../libs/jqueryTS/index.d.ts"/>
-///<reference path="../libs/chartsTS/charts.d.ts"/>
+/// <reference path="./../node_modules/@types/jquery/index.d.ts"/>
 var Test;
 (function (Test) {
     /********************************************** GRILLAS *************************************************/
@@ -621,7 +619,7 @@ var Test;
         var pagina = "backend/carreras/todos/";
         var tokken = localStorage.getItem('tokken');
         var datoObjeto = {
-            "tokken": tokken,
+            "tokken": tokken
         };
         $.ajax({
             type: 'POST',
@@ -832,7 +830,7 @@ var Test;
             var tokken = localStorage.getItem('tokken');
             var datoObjeto = {
                 "tokken": tokken,
-                "id": Carrera.id,
+                "id": Carrera.id
             };
             //LIMPIO EL CONTENIDO DEL DIV    
             //
@@ -1137,7 +1135,7 @@ var Test;
         var pagina = "backend/a/deudaTotalAlumnos";
         var tokken = localStorage.getItem('tokken');
         var datoObjeto = {
-            "tokken": tokken,
+            "tokken": tokken
         };
         $.ajax({
             type: 'POST',
@@ -1168,7 +1166,7 @@ var Test;
         var pagina = "backend/caja/FormAperturaCaja";
         var tokken = localStorage.getItem('tokken');
         var datoObjeto = {
-            "tokken": tokken,
+            "tokken": tokken
         };
         $.ajax({
             type: 'POST',
@@ -1196,7 +1194,7 @@ var Test;
         var pagina = "backend/caja/FormAperturaCaja";
         var tokken = localStorage.getItem('tokken');
         var datoObjeto = {
-            "tokken": tokken,
+            "tokken": tokken
         };
         $.ajax({
             type: 'POST',
@@ -1225,7 +1223,7 @@ var Test;
         var pagina = "backend/caja/FormAperturaCaja";
         var tokken = localStorage.getItem('tokken');
         var datoObjeto = {
-            "tokken": tokken,
+            "tokken": tokken
         };
         $.ajax({
             type: 'POST',
@@ -1430,7 +1428,7 @@ var Test;
             var tokken = localStorage.getItem('tokken');
             var datoObjeto = {
                 "tokken": tokken,
-                "usuario": usuario,
+                "usuario": usuario
             };
             $.ajax({
                 type: 'POST',
@@ -1515,23 +1513,28 @@ var Test;
             "tokken": tokken,
             "detalle": detalle
         };
-        $.ajax({
-            type: 'POST',
-            url: pagina,
-            dataType: "json",
-            data: datoObjeto,
-            async: true
-        })
-            .done(function (objJSON) {
-            console.log(objJSON);
-            if (objJSON.respuesta) {
-                localStorage.setItem('tokken', objJSON.token);
-                location.href = "/tp/v2/asd/"; //carpetas que uso
-            }
-        })
-            .fail(function (jqXHR, textStatus, errorThrown) {
-            alert(jqXHR.responseText + "\n" + textStatus + "\n" + errorThrown);
-        });
+        if (usuario === '' && clave === '' && tokken === null) {
+            return;
+        }
+        else {
+            $.ajax({
+                type: 'POST',
+                url: pagina,
+                dataType: "json",
+                data: datoObjeto,
+                async: true
+            })
+                .done(function (objJSON) {
+                console.log(objJSON);
+                if (objJSON.respuesta) {
+                    localStorage.setItem('tokken', objJSON.token);
+                    location.href = "/IPES"; //carpetas que uso
+                }
+            })
+                .fail(function (jqXHR, textStatus, errorThrown) {
+                alert(jqXHR.responseText + "\n" + textStatus + "\n" + errorThrown);
+            });
+        }
     }
     Test.Login = Login;
     function Logout() {
@@ -1568,70 +1571,76 @@ var Test;
         });
     }
     Test.Logout = Logout;
+    // traer tdo de una caja entradas y salidas
+    //export function TraerTodoParaUnaCajaPor
     //yapa
-    function Estadisticas() {
+    /*
+    export function Estadisticas():void{
         $('#divRespuesta').html("");
-        var pagina = "backend/caja/Estadisticas";
-        var detalle = "Logout"; // crear registro de logn y de control  
-        var tokken = localStorage.getItem('tokken');
-        var datoObjeto = {
-            "tokken": tokken,
-            "detalle": detalle
-        };
+        let pagina = "backend/caja/Estadisticas";
+        let detalle = "Logout";  // crear registro de logn y de control
+        let tokken = localStorage.getItem('tokken');
+        let datoObjeto ={
+            "tokken":tokken,
+            "detalle" : detalle
+            };
         $.ajax({
-            type: 'POST',
-            url: pagina,
-            dataType: "json",
-            data: datoObjeto,
-            async: true
+        type: 'POST',
+        url: pagina,
+        dataType: "json",
+        data : datoObjeto,
+        async: true
         })
-            .done(function (objJSON) {
-            var ctx = document.getElementById('myChart').getContext('2d');
+        .done(function (objJSON):void {
+            
+            var ctx = (<any>document).getElementById('myChart').getContext('2d');
             var myChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
                     datasets: [{
-                            label: '# of Votes',
-                            data: [12, 19, 3, 5, 2, 3],
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 0.2)',
-                                'rgba(54, 162, 235, 0.2)',
-                                'rgba(255, 206, 86, 0.2)',
-                                'rgba(75, 192, 192, 0.2)',
-                                'rgba(153, 102, 255, 0.2)',
-                                'rgba(255, 159, 64, 0.2)'
+                        label: '# of Votes',
+                        data: [12, 19, 3, 5, 2, 3],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
                             ],
-                            borderColor: [
-                                'rgba(255,99,132,1)',
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 206, 86, 1)',
-                                'rgba(75, 192, 192, 1)',
-                                'rgba(153, 102, 255, 1)',
-                                'rgba(255, 159, 64, 1)'
+                        borderColor: [
+                            'rgba(255,99,132,1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
                             ],
-                            borderWidth: 1
-                        }]
+                        borderWidth: 1
+                    }]
                 },
                 options: {
                     scales: {
                         yAxes: [{
-                                ticks: {
-                                    beginAtZero: true
-                                }
-                            }]
+                            ticks: {
+                                beginAtZero:true
+                            }
+                        }]
                     }
                 }
             });
             myChart.update();
             //$('#divRespuesta').html(myChart);
-            console.log(myChart);
+        
+        console.log(myChart);
+                    
         })
-            .fail(function (jqXHR, textStatus, errorThrown) {
-            alert(jqXHR.responseText + "\n" + textStatus + "\n" + errorThrown);
+        .fail(function (jqXHR:any, textStatus:any, errorThrown:any) {
+        alert(jqXHR.responseText + "\n" + textStatus + "\n" + errorThrown);
         });
     }
-    Test.Estadisticas = Estadisticas;
+    */
     /******validaciones********************************/
     function validarInputs(params) {
         var fieldType = params.type;
@@ -1884,4 +1893,3 @@ var Test;
     }
     Test.validarTodoFormAltaAlumno = validarTodoFormAltaAlumno;
 })(Test || (Test = {}));
-//# sourceMappingURL=funciones.js.map

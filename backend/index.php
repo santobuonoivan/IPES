@@ -69,7 +69,7 @@ $app = new \Slim\App(["settings" => $config]);
         $this->put('/', \Usuario::class . ':ModificarUno');
 
 
-    })->add($verificarToken);
+    })/*->add($verificarToken)*/;
     $app->group('/forms', function () {   
 
         
@@ -148,7 +148,6 @@ $app = new \Slim\App(["settings" => $config]);
     $app->group('/login', function(){        
         $this->post('/entrar', function (Request $request, Response $response,$args){
             $parametros = $request->getParsedBody();
-            
             $obj = new stdClass();
             $datos = new stdClass();
             if(isset($parametros['tokken'])){//valido si está loguin
@@ -158,7 +157,7 @@ $app = new \Slim\App(["settings" => $config]);
                     $parametros["usuario"]=$datos->usuario;
                     $parametros["clave"]=$datos->clave;                    
                 }catch(Exception $e){                    
-                    $mensaje = "Error encontrado: ".$e->getMessage();                    
+                    $obj->mensajeToken = "Error encontrado: ".$e->getMessage();                    
                 }
             }
             $usuario = $parametros["usuario"];
@@ -166,14 +165,13 @@ $app = new \Slim\App(["settings" => $config]);
             $objRespuesta = Usuario::VerificarUsuario($usuario,$clave);
             if($objRespuesta !=false){
                 $tiempo = time();
-                $datos->id=$objRespuesta->id;
+                $datos->usuario_id=$objRespuesta->usuario_id;
                 $datos->apellido=$objRespuesta->apellido;
                 $datos->nombre=$objRespuesta->nombre;
                 $datos->dni=$objRespuesta->dni;
                 $datos->email=$objRespuesta->email;
                 $datos->turno=$objRespuesta->turno;
                 $datos->perfil=$objRespuesta->perfil;
-                $datos->dni=$objRespuesta->dni;
 
                 $token = array(
                     "name"=>"MiToken",
@@ -196,7 +194,7 @@ $app = new \Slim\App(["settings" => $config]);
                 
             }else{
                 
-                $obj->respuesta = false;                
+                $obj->respuestaVerificacionUser = false;                
             }
             return $response->withJson($obj, 200);            
             
