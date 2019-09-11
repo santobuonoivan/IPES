@@ -3,7 +3,8 @@ require_once "iPersona.php";
 
 
 class Usuario implements IPersona{
-    public $id;    
+
+    public $usuario_id;    
     public $apellido;
     public $nombre;
     public $dni;
@@ -22,6 +23,9 @@ class Usuario implements IPersona{
     public $provincia;
     public $ciudad;
     public $codigopostal;
+    public $is_active;
+    public $profile_image;
+    public $country;
 
 
     function ToJSON(){
@@ -33,8 +37,6 @@ class Usuario implements IPersona{
         $filtro=$argumentos['filtro'];
         //echo $filtro;
         $elUsuario=Usuario::TraerUnUsuario($filtro);
-        //var_dump($elUsuario);
-        
         $newResponse = Usuario::generarDivUsuario($elUsuario);
         return $newResponse;
     }
@@ -76,9 +78,9 @@ class Usuario implements IPersona{
     }
     public  function BorrarUno($request, $response, $args) {
         $ArrayDeParametros = $request->getParsedBody();
-        $id=$ArrayDeParametros['id'];
+        $usuario_id=$ArrayDeParametros['id'];
         $Usuario= new Usuario();
-        $Usuario->id=$id;
+        $Usuario->usuario_id=$usuario_id;
         $cantidadDeBorrados=$Usuario->BorrarUsuario();
 
         $objDelaRespuesta= new stdclass();
@@ -95,7 +97,7 @@ class Usuario implements IPersona{
         $ArrayDeParametros = $request->getParsedBody();
         //var_dump($ArrayDeParametros);    	
         $miUsuario = new Usuario();
-        $miUsuario->id=$ArrayDeParametros['id'];
+        $miUsuario->usuario_id=$ArrayDeParametros['id'];
         $miUsuario->nombre=$ArrayDeParametros['nombre'];
         $miUsuario->apellido=$ArrayDeParametros['apellido'];
         $miUsuario->clave=$ArrayDeParametros['clave'];
@@ -207,7 +209,7 @@ class Usuario implements IPersona{
 
                                 $grilla2.=  "<tr>
                                                 <th scope='row'>".($j+1)."</th>
-                                                <td>{$usuarios[$j]->id}</td>
+                                                <td>{$usuarios[$j]->usuario_id}</td>
                                                 <td>{$usuarios[$j]->apellido}</td>
                                                 <td>{$usuarios[$j]->nombre}</td>
                                                 <td>{$usuarios[$j]->dni}</td>
@@ -244,7 +246,7 @@ class Usuario implements IPersona{
 
                                 $grilla2.=  "<tr>
                                                 <th scope='row'>".($j+1)."</th>
-                                                <td>{$usuarios[$j]->id}</td>
+                                                <td>{$usuarios[$j]->usuario_id}</td>
                                                 <td>{$usuarios[$j]->apellido}</td>
                                                 <td>{$usuarios[$j]->nombre}</td>
                                                 <td>{$usuarios[$j]->dni}</td>
@@ -289,7 +291,7 @@ class Usuario implements IPersona{
                     $grilla2.=   "<tbody>
                                     <tr>
                                     <th scope='row'>1</th>
-                                    <td>$usuarios->id</td>
+                                    <td>$usuarios->usuario_id</td>
                                     <td>$usuarios->apellido</td>
                                     <td>$usuarios->nombre</td>
                                     <td>$usuarios->dni</td>
@@ -329,8 +331,8 @@ class Usuario implements IPersona{
         $consulta =$objetoAccesoDato->RetornarConsulta("
             delete 
             from usuarios 				
-            WHERE id=:id");	
-        $consulta->bindValue(':id',$this->id, PDO::PARAM_INT);		
+            WHERE usuario_id=:usuario_id");	
+        $consulta->bindValue(':usuario_id',$this->usuario_id, PDO::PARAM_INT);		
         $consulta->execute();
         return $consulta->rowCount();
     }   
@@ -356,8 +358,8 @@ class Usuario implements IPersona{
                 ciudad= :ciudad,
                 codigopostal= :codigopostal                
 
-            WHERE id=:id");
-        $consulta->bindValue(':id',$this->id, PDO::PARAM_INT);
+            WHERE usuario_id=:usuario_id");
+        $consulta->bindValue(':usuario_id',$this->usuario_id, PDO::PARAM_INT);
         $consulta->bindValue(':nombre',$this->nombre, PDO::PARAM_STR);
         $consulta->bindValue(':apellido', $this->apellido, PDO::PARAM_STR);
         $consulta->bindValue(':dni', $this->dni, PDO::PARAM_INT);

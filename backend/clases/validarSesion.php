@@ -4,6 +4,6 @@ session_start();
     if(isset($_SESSION['usuario'])){            
         //var_dump($_SESSION);
     }else {
-        header('Location: ./login.html');
+        header('Location:./login.html');
     }
 ?>

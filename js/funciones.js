@@ -1515,6 +1515,7 @@ var Test;
             "tokken": tokken,
             "detalle": detalle
         };
+        
         $.ajax({
             type: 'POST',
             url: pagina,

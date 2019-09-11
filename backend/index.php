@@ -69,7 +69,7 @@ $app = new \Slim\App(["settings" => $config]);
         $this->put('/', \Usuario::class . ':ModificarUno');
 
 
-    })->add($verificarToken);
+    })/*->add($verificarToken)*/;
     $app->group('/forms', function () {   
 
         
@@ -148,9 +148,9 @@ $app = new \Slim\App(["settings" => $config]);
     $app->group('/login', function(){        
         $this->post('/entrar', function (Request $request, Response $response,$args){
             $parametros = $request->getParsedBody();
-            
             $obj = new stdClass();
             $datos = new stdClass();
+            die;
             if(isset($parametros['tokken'])){//valido si está loguin
                 try{                    
                     $token = $parametros['tokken'];
@@ -158,7 +158,7 @@ $app = new \Slim\App(["settings" => $config]);
                     $parametros["usuario"]=$datos->usuario;
                     $parametros["clave"]=$datos->clave;                    
                 }catch(Exception $e){                    
-                    $mensaje = "Error encontrado: ".$e->getMessage();                    
+                    $obj->mensajeToken = "Error encontrado: ".$e->getMessage();                    
                 }
             }
             $usuario = $parametros["usuario"];
@@ -173,7 +173,6 @@ $app = new \Slim\App(["settings" => $config]);
                 $datos->email=$objRespuesta->email;
                 $datos->turno=$objRespuesta->turno;
                 $datos->perfil=$objRespuesta->perfil;
-                $datos->dni=$objRespuesta->dni;
 
                 $token = array(
                     "name"=>"MiToken",
@@ -196,7 +195,7 @@ $app = new \Slim\App(["settings" => $config]);
                 
             }else{
                 
-                $obj->respuesta = false;                
+                $obj->respuestaVerificacionUser = false;                
             }
             return $response->withJson($obj, 200);            
             
