@@ -1,6 +1,7 @@
 <?php
 require_once "./../model/alumno.php";
 require_once "./../servicies/alumno.php";
+require_once "./../../cuotas_pagos/servicies/cuotas_pagos.php";
 
 
 class ControllerAlumno
@@ -27,83 +28,30 @@ class ControllerAlumno
 		$newResponse = generarDivAlumno($todosLosAlumnos);
 		return $newResponse;
 	}
-	public function admAlumno($request, $response, $args) {
+    public function admAlumno($request, $response, $args) {
 		$todosLosAlumnos=Alumno::TraerTodoLosAlumnos();
-		$todosLosAlumnosOrdenados= Alumno::sort_by_orden($todosLosAlumnos);  
+		$todosLosAlumnosOrdenados= sort_by_orden($todosLosAlumnos);
 		return $response->withJson($todosLosAlumnosOrdenados, 200);		
 	}
+	// TODO debería sacarse por ser una vista
 	public static function divCuotasPagosAlumno($request, $response, $args){
-		$argumentos=$request->getParsedBody();		
+		$argumentos=$request->getParsedBody();
 		$alumno = new Alumno();
         $alumno->id=$argumentos['id'];
 		$cuotasPagos= $alumno->TraerCuotasPagos();
 		$respuesta= new stdClass();
 		$respuesta->alumno= $alumno->TraerUnAlumnoId();
-		$respuesta->divCuotas=Cuotas::generarDivCuotasDeUnAlumno2($cuotasPagos->cuotas);
-		$respuesta->divPagos=Pagos::generarDivPagosDeUnAlumno2($cuotasPagos->pagos);
+		$respuesta->divCuotas=generarDivCuotasDeUnAlumno2($cuotasPagos->cuotas);
+		$respuesta->divPagos=generarDivPagosDeUnAlumno2($cuotasPagos->pagos);
 		return $response->withJson($respuesta, 200);
-	}	
-    public function CargarUno($request, $response, $args) {		
+	}
+    public function CargarUno($request, $response, $args) {
+
 		$ArrayDeParametros = $request->getParsedBody();
 	    //var_dump($ArrayDeParametros);    	
-		$miAlumno = new Alumno();		
-	    $miAlumno->dni=$ArrayDeParametros['dni'];
-	    $miAlumno->nombre=$ArrayDeParametros['nombre'];
-		$miAlumno->apellido=$ArrayDeParametros['apellido'];
-		$miAlumno->sexo=$ArrayDeParametros['sexo'];
-	    $miAlumno->legajo=$ArrayDeParametros['legajo'];
-		$miAlumno->idcarrera=$ArrayDeParametros['idcarrera'];
-		$miAlumno->fechadeinscripcion=$ArrayDeParametros['fechadeinscripcion'];
-	    $miAlumno->modalidad=$ArrayDeParametros['modalidad'];
-		$miAlumno->turno=$ArrayDeParametros['turno'];
-		$miAlumno->anio_carrera=$ArrayDeParametros['anio_carrera'];
-	    $miAlumno->activo=$ArrayDeParametros['activo'];
-		$miAlumno->fechadenacimiento=$ArrayDeParametros['fechadenacimiento'];
-		$miAlumno->direccion=$ArrayDeParametros['direccion'];
-	    $miAlumno->tel=$ArrayDeParametros['tel'];
-		$miAlumno->celular=$ArrayDeParametros['celular'];
-		$miAlumno->estadocivil=$ArrayDeParametros['estadocivil'];
-	    $miAlumno->secundario=$ArrayDeParametros['secundario'];
-		$miAlumno->email=$ArrayDeParametros['email'];
-		$miAlumno->facebook=$ArrayDeParametros['facebook'];
-		$miAlumno->trabajo=$ArrayDeParametros['trabajo'];
-		$miAlumno->conocio =  $ArrayDeParametros['conocio'];
-		$miAlumno->promo = $ArrayDeParametros['promo'];
+		$miAlumno = new Alumno($ArrayDeParametros);
 		//documentacion
-		$documentacion= new stdClass();
-		
-		if($ArrayDeParametros['documentacion']['titulo']!=null){
-			$documentacion->titulo=$ArrayDeParametros['documentacion']['titulo'];
-		}else{
-			$documentacion->titulo=0;
-		}
-		if($ArrayDeParametros['documentacion']['dni']!=null){
-			$documentacion->dni=$ArrayDeParametros['documentacion']['dni'];
-		}else{
-			$documentacion->dni=0;
-		}
-		if($ArrayDeParametros['documentacion']['fotos']!=null){
-			$documentacion->fotos=$ArrayDeParametros['documentacion']['fotos'];
-		}else{
-			$documentacion->fotos=0;
-		}
-		$documentacion->cert_salud=0;
-		if($ArrayDeParametros['supago']['comprende']["esmatricula"]!=null){
-			$documentacion->esmatricula=$ArrayDeParametros['supago']['comprende']["esmatricula"];
-		}else{
-			$documentacion->esmatricula=0;
-		}
-		if($ArrayDeParametros['supago']['comprende']["escuota"]!=null){
-			$documentacion->escuota=$ArrayDeParametros['supago']['comprende']["escuota"];
-		}else{
-			$documentacion->escuota=0;
-		}
-		if($ArrayDeParametros['supago']['comprende']["escertificacion"]!=null){
-			$documentacion->escertificacion=$ArrayDeParametros['supago']['comprende']["escertificacion"];
-		}else{
-			$documentacion->escertificacion=0;
-		}		
-		
+		$documentacion= new stdClass($ArrayDeParametros);
 		$miAlumno->id_documentacion=Alumno::InsertarDocumentacion($documentacion);
 		$resultadoAlumno = $miAlumno->InsertarElAlumno();
 		//cuotas pagos
@@ -113,25 +61,17 @@ class ControllerAlumno
 		$datos->valores=$ArrayDeParametros['valores'];
 		//genera obj de cuotas y pagos automatico
 		$vectores = Cuotas::generarArrayCuotasPagos($datos);
-		//var_dump($vectores);		
-		$resultadoCuotas=Alumno::insertarCuotasYPagos($vectores);		
+		$resultadoCuotas=Alumno::insertarCuotasYPagos($vectores);
 	   	$objDelaRespuesta= new stdclass();
 		$objDelaRespuesta->resultadoAlumno=$resultadoAlumno;
 		$objDelaRespuesta->resultadoCuotas=$resultadoCuotas;
-		/*
-		var_dump($miAlumno);
-		var_dump($documentacion);
-		var_dump($datos);*/
+
 		return $response->withJson($objDelaRespuesta, 200);
-      	
     }
 	public function BorrarUno($request, $response, $args) {
      	$ArrayDeParametros = $request->getParsedBody();
-     	$id=$ArrayDeParametros['id'];
-     	$Alumno= new Alumno();
-     	$Alumno->id=$id;
+     	$Alumno= new Alumno($ArrayDeParametros);
      	$cantidadDeBorrados=$Alumno->BorrarAlumno();
-
      	$objDelaRespuesta= new stdclass();
 	    $objDelaRespuesta->cantidad=$cantidadDeBorrados;
 	    if($cantidadDeBorrados>0)
@@ -147,32 +87,7 @@ class ControllerAlumno
     }	
 	public function ModificarUno($request, $response, $args) {
 		$ArrayDeParametros = $request->getParsedBody();
-	    //var_dump($ArrayDeParametros);    	
-	    $miAlumno = new Alumno();
-		// CARGO OBJETO ALUMNO PARA PODER UPDATEAR
-		$miAlumno->id=$ArrayDeParametros['id'];
-		$miAlumno->dni=$ArrayDeParametros['dni'];
-	    $miAlumno->nombre=$ArrayDeParametros['nombre'];
-		$miAlumno->apellido=$ArrayDeParametros['apellido'];
-		$miAlumno->sexo=$ArrayDeParametros['sexo'];
-	    $miAlumno->legajo=$ArrayDeParametros['legajo'];
-		$miAlumno->idcarrera=$ArrayDeParametros['idcarrera'];
-		$miAlumno->fechadeinscripcion=$ArrayDeParametros['fechadeinscripcion'];
-	    $miAlumno->modalidad=$ArrayDeParametros['modalidad'];
-		$miAlumno->turno=$ArrayDeParametros['turno'];
-		$miAlumno->anio_carrera=$ArrayDeParametros['anio_carrera'];
-	    $miAlumno->activo=$ArrayDeParametros['activo'];
-		$miAlumno->fechadenacimiento=$ArrayDeParametros['fechadenacimiento'];
-		$miAlumno->direccion=$ArrayDeParametros['direccion'];
-	    $miAlumno->tel=$ArrayDeParametros['tel'];
-		$miAlumno->celular=$ArrayDeParametros['celular'];
-		$miAlumno->estadocivil=$ArrayDeParametros['estadocivil'];
-	    $miAlumno->secundario=$ArrayDeParametros['secundario'];
-		$miAlumno->email=$ArrayDeParametros['email'];
-		$miAlumno->facebook=$ArrayDeParametros['facebook'];
-	    $miAlumno->trabajo=$ArrayDeParametros['trabajo'];
-	    $miAlumno->id_documentacion=$ArrayDeParametros['id_documentacion'];
-		//var_dump($miAlumno);
+	    $miAlumno = new Alumno($ArrayDeParametros);
 	   	$resultado =$miAlumno->ModificarAlumno();
 	   	$objDelaRespuesta= new stdclass();
 		$objDelaRespuesta->resultado=$resultado;
@@ -180,71 +95,9 @@ class ControllerAlumno
 	}
 	public function deudaAlumno($request, $response, $args) {
 		$argumentos=$request->getParsedBody();		
-		$alumno = new Alumno();
-        $alumno->id=$argumentos['id'];
+		$alumno = new Alumno($argumentos);
 		$todasLasCuotasPagosAlumno=$alumno->TraerCuotasPagos();
-		$saldoAFavor=0;
-		$fechaHoy= date("Y-m-d"); 
-		$deuda=0;
-		$arrayDeuda = array();
-		for ($i = 0; $i < count($todasLasCuotasPagosAlumno->cuotas); $i++) {
-			$cuota = $todasLasCuotasPagosAlumno->cuotas[$i];			
-			if($cuota->fecha < $fechaHoy){				
-				$importe = $cuota->importe;
-				for ($j = 0; $j < count($todasLasCuotasPagosAlumno->pagos); $j++) {
-					$pago = $todasLasCuotasPagosAlumno->pagos[$j];
-					if ($cuota->concepto == $pago->concepto){
-						$importe=$importe-$pago->importe;
-					}                            
-				}
-				if($importe>0){
-					$cuota->importe=$importe;
-					array_push($arrayDeuda,$cuota);
-					$deuda=$deuda+$importe;
-				}else{
-					$saldoAFavor=$saldoAFavor+$importe;
-				}
-			}
-		}
-		$div='';
-
-		$div.="	<h1>Deuda</h1>                    
-				<div class='table table-responsive table-sm' id='table1'>
-					<table class='table'>
-						<thead>
-							<tr>
-								<th scope='col'>Estado</th>
-								<th scope='col'>Concepto</th>
-								<th scope='col'>Fecha</th>
-								<th scope='col'>Importe</th>								
-							</tr>
-						</thead>
-						<tbody>";
-				for($i=0;$i<count($arrayDeuda);$i++){                    
-					$div.=  "<tr>
-								<td scope='col' contenteditable='false'>Vencida</td>
-								<td scope='col' contenteditable='false'>".$arrayDeuda[$i]->concepto."</td>
-								<td scope='col' contenteditable='false'>".$arrayDeuda[$i]->fecha."</td>                                                
-								<td scope='col' contenteditable='false'>".$arrayDeuda[$i]->importe."</td>
-							</tr>";                    
-				}
-                $div.=  "</tbody>
-					</table>
-				</div>
-				<div class='row'>
-					<div class='input-group mb-3 col-sm-4'>
-						<div class='input-group-prepend'>
-							<span class='input-group-text'>Deuda</span>
-						</div>
-						<input type='text' class='form-control' value='{$deuda}'>
-					</div>
-					<div class='input-group mb-3 col-sm-4'>
-						<div class='input-group-prepend'>
-							<span class='input-group-text'>Saldo a favor</span>
-						</div>
-						<input type='text' class='form-control' value='{$saldoAFavor}'>
-					</div>
-				</div>";		  
+		$div=generarDivDeuda($todasLasCuotasPagosAlumno);
 		return $div;
 	}
 	public function deudaTotalAlumnos($request, $response, $args) {
@@ -477,22 +330,7 @@ class ControllerAlumno
 				$consulta->execute();		
 				return $objetoAccesoDato->RetornarUltimoIdInsertado();
 			}		
-			public static function sort_by_orden($array){
-				for($i=1;$i<count($array);$i++)
-				{
-					for($j=0;$j<count($array)-$i;$j++)
-					{
-						if($array[$j]->apellido >$array[$j+1]->apellido)
-						{
-							$k=$array[$j+1];
-							$array[$j+1]=$array[$j];
-							$array[$j]=$k;
-						}
-					}
-				}		 
-				return $array;
-			}
-			
+
 			/*************public function modificarCuotasYPagos($cuotasPagos){}******************************************/
 			
 			public static function generarModalCuotasYPagos($cuotasPagos,$nombre,$apellido){
@@ -639,102 +477,6 @@ class ControllerAlumno
 				$resultado->pagosNoActualizadas=$pagosNoActualizadas;
 				return $resultado;
 			}
-			public static function DivsDeuda($Alumnos){
-				$fechaHoy= date("Y-m-d");
-				$div=	"<br>
-					<div class='container opacidad'>
-						<div class='p-3 mb-2 bg-secondary text-white rounded container '>
-
-							<div class='input-group row'>
-								<div class='col-8' >
-									<span> Consulta Deuda Total </span>
-								</div>
-								<div class='col-8' >							
-									<button type='button' class='btn btn-default btn-sm' onclick='Test.Imprimir(\"divResultado\")'>
-										<span class='glyphicon glyphicon-print'></span>
-									</button>
-								</div>								
-							</div>							
-						</div>";
-				$deudaTotal=0;
-				foreach ($Alumnos as $alumno){//recorre alumnos
-					$todasLasCuotasPagosAlumno=$alumno->TraerCuotasPagos();					
-					$saldoAFavor=0;		 
-					$deuda=0;
-					$arrayDeuda = array();					
-					for ($i = 0; $i < count($todasLasCuotasPagosAlumno->cuotas); $i++) {// recoore cuotas alum
-						$cuota = $todasLasCuotasPagosAlumno->cuotas[$i];					
-						if($cuota->fecha < $fechaHoy){//chequea vencimiento			
-							$importe = $cuota->importe;
-							for ($j = 0; $j < count($todasLasCuotasPagosAlumno->pagos); $j++) { //recorre pagos
-								$pago = $todasLasCuotasPagosAlumno->pagos[$j];
-								if ($cuota->concepto == $pago->concepto){//resta imporets
-									$importe=$importe-$pago->importe;
-								}                            
-							}
-							if($importe>0){//acumula si hay deuda
-								$cuota->importe=$importe;
-								array_push($arrayDeuda,$cuota);
-								$deuda=$deuda+$importe;
-							}else{
-								$saldoAFavor=$saldoAFavor+$importe;
-							}
-						}
-					}
-					if(empty($arrayDeuda)){
-
-					}else{
-						$div.="	<div class='p-1 mb-2 bg-secondary text-white rounded container'>
-									Deuda {$alumno->apellido},{$alumno->nombre},-----Email:{$alumno->email},-----tel:{$alumno->tel}/{$alumno->celular}</span></h5>                  
-								</div>
-								<div class='table table-responsive table-sm '>
-									<table class='table miTable'>
-										<thead>
-											<tr>
-												<th scope='col' class='misTds'>Estado</th>
-												<th scope='col' class='misTds'>Concepto</th>
-												<th scope='col' class='misTds'>Fecha</th>
-												<th scope='col' class='misTds'>Importe</th>								
-											</tr>
-										</thead>
-										<tbody>";
-								for($i=0;$i<count($arrayDeuda);$i++){                    
-									$div.=  "<tr>
-												<td scope='col' class='misTds' contenteditable='false'>Vencida</td>
-												<td scope='col' class='misTds' contenteditable='false'>".$arrayDeuda[$i]->concepto."</td>
-												<td scope='col' class='misTds' contenteditable='false'>".$arrayDeuda[$i]->fecha."</td>                                                
-												<td scope='col' class='misTds' contenteditable='false'>".$arrayDeuda[$i]->importe."</td>
-											</tr>";
-									$deudaTotal+=$arrayDeuda[$i]->importe;                
-								}								
-										if($saldoAFavor>0){
-								$div.=  	"<tr>												
-												<th scope='col' class='misTds' contenteditable='false'>Saldo a favor</th>
-												<th scope='col' class='misTds' contenteditable='false'>{$saldoAFavor}</th>												
-												<th scope='col' class='misTds' contenteditable='false'>Deuda</th>
-												<th scope='col' class='misTds' contenteditable='false'>{$deuda}</th>												
-											</tr>";
-										}else{
-											
-								$div.=  	"<tr>
-												<th></th>
-												<th></th>
-												<th scope='col' class='misTds' contenteditable='false'>Deuda</th>
-												<th scope='col' class='misTds' contenteditable='false'>{$deuda}</th>												
-											</tr>";
-										}
-								$div.=  "</tbody>										
-									</table>
-								</div>";
-					}
-					unset($arrayDeuda);
-				}
-				$div.=  "<div class='input-group mb-3 col-sm-12'>									
-							<span class='input-group-text'>Total Deuda {$deudaTotal}</span>									
-						</div>
-					</div>";
-				return $div;
-			}			
-		//FIN FUNCIONES ADMINISTRACION	
+		//FIN FUNCIONES ADMINISTRACION
 	/****************************************************************************************************/
 }

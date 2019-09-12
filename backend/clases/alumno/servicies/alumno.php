@@ -260,119 +260,182 @@ function generarDivAlumno($alumnos){
 
 };
 
-function formAdm($request, $response, $args) {
-    $div = "
-					<html lang='en'>
-						<link rel='stylesheet' href='libs/css/style.css'>										
-						<body>
-							<br>		
-							<div class='container-fluid opacidad'><!-- contiene a todo y lo alinea -->
-								<div class='p-3 mb-2 bg-secondary text-white rounded'>
-									<h2>Consulta ADM</h2>
-								</div>
-								<div class='row opacidad border-1' ><!-- mapea para usarlo como grid -->
-										
-									<div class='col-5'><!-- div busqueda -->
-										<div class='input-group'>
-											<div class='input-group-prepend '>
-												<span class='input-group-text'>Busque alumno</span>
-											</div>
-											<input class='form-control' list='inputDataList' id='inputAlumnoSelect' type='text' onchange='Test.cargarDivCuotasPagos()'>
-											<datalist id='inputDataList' >											
-											</datalist>
-										</div>
-									</div>
-									<div class='col-6 '><!-- div pluss -->
-										<span> pluss</span>
-										<input type='checkbox' name='checkActivo' id='checkActivo'>
-										<input type='button' value='Deuda Alumno' onclick='Test.GenerarDeudaAlumno()'>
-										<input type='button' value='Algo2'>
-										<div class='modal fade bd-example-modal-lg' tabindex='-1' role='dialog' aria-labelledby='myLargeModalLabel' aria-hidden='true' id='pop'>
-											<div class='modal-content'>
-												
-											</div>
-										</div>
-									</div>
+function sort_by_orden($array){
+    for($i=1;$i<count($array);$i++)
+    {
+        for($j=0;$j<count($array)-$i;$j++)
+        {
+            if($array[$j]->apellido >$array[$j+1]->apellido)
+            {
+                $k=$array[$j+1];
+                $array[$j+1]=$array[$j];
+                $array[$j]=$k;
+            }
+        }
+    }
+    return $array;
+}
 
-									<div class='col-12'><!-- div info -->
-										<div class='row'>
-											<div class='input-group col-sm-2'>
-												<div class='input-group-prepend '>
-													<span class='input-group-text'>Legajo</span>
-												</div>
-												<input type='text' class='form-control' id='inputLegajo' placeholder='Legajo'>												
-											</div>
-											<div class='input-group col-sm-3'>
-												<div class='input-group-prepend'>
-													<span class='input-group-text'>Trabajo</span>
-												</div>
-												<input type='text' class='form-control' id='inputTrabajo' placeholder='Trabajo'>												
-											</div>
-											<div class='input-group col-sm-4'>
-												<div class='input-group-prepend'>
-													<span class='input-group-text'>Email</span>
-												</div>
-												<input type='text' class='form-control' id='inputEmail' placeholder='Email'>												
-											</div>
-																					
-											<div class='input-group col-sm-3'>
-												<div class='input-group-prepend'>
-													<span class='input-group-text'>Tel</span>
-												</div>
-												<input type='text' class='form-control' id='inputTelefono' placeholder='Tel'>												
-											</div>
-											<div class='input-group col-sm-2'>
-												<div class='input-group-prepend'>
-													<span class='input-group-text'>Dni</span>
-												</div>
-												<input type='text' class='form-control' id='inputDni' placeholder='D.N.I.'>												
-											</div>	
-											<div class='input-group col-sm-3'>
-												<div class='input-group-prepend'>
-													<span class='input-group-text'>Cel</span>
-												</div>
-												<input type='text' class='form-control' id='inputCel' placeholder='Cel'>												
-											</div>
-											<div class='input-group col-sm-4'>
-												<div class='input-group-prepend'>
-													<span class='input-group-text'>Direccion</span>
-												</div>
-												<input type='text' class='form-control' id='inputDir' placeholder='Direccion'>												
-											</div>
-											<div class='input-group col-sm-3'>
-												<div class='input-group-prepend'>
-													<span class='input-group-text'>Fech. Nac.</span>
-												</div>
-												<input type='date' class='form-control' id='inputFech'>												
-											</div>											
-										</div>
-									</div>
-									<div class='input-group col-sm-12' id='divDeudas'>
+function generarDivDeuda($todasLasCuotasPagosAlumno){
+    $saldoAFavor=0;
+    $fechaHoy= date("Y-m-d");
+    $deuda=0;
+    $arrayDeuda = array();
+    for ($i = 0; $i < count($todasLasCuotasPagosAlumno->cuotas); $i++) {
+        $cuota = $todasLasCuotasPagosAlumno->cuotas[$i];
+        if($cuota->fecha < $fechaHoy){
+            $importe = $cuota->importe;
+            for ($j = 0; $j < count($todasLasCuotasPagosAlumno->pagos); $j++) {
+                $pago = $todasLasCuotasPagosAlumno->pagos[$j];
+                if ($cuota->concepto == $pago->concepto){
+                    $importe=$importe-$pago->importe;
+                }
+            }
+            if($importe>0){
+                $cuota->importe=$importe;
+                array_push($arrayDeuda,$cuota);
+                $deuda=$deuda+$importe;
+            }else{
+                $saldoAFavor=$saldoAFavor+$importe;
+            }
+        }
+    }
+    $div="	<h1>Deuda</h1>                    
+				<div class='table table-responsive table-sm' id='table1'>
+					<table class='table'>
+						<thead>
+							<tr>
+								<th scope='col'>Estado</th>
+								<th scope='col'>Concepto</th>
+								<th scope='col'>Fecha</th>
+								<th scope='col'>Importe</th>								
+							</tr>
+						</thead>
+						<tbody>";
+    for($i=0;$i<count($arrayDeuda);$i++){
+        $div.=  "<tr>
+								<td scope='col' contenteditable='false'>Vencida</td>
+								<td scope='col' contenteditable='false'>".$arrayDeuda[$i]->concepto."</td>
+								<td scope='col' contenteditable='false'>".$arrayDeuda[$i]->fecha."</td>                                                
+								<td scope='col' contenteditable='false'>".$arrayDeuda[$i]->importe."</td>
+							</tr>";
+    }
+    $div.=  "</tbody>
+					</table>
+				</div>
+				<div class='row'>
+					<div class='input-group mb-3 col-sm-4'>
+						<div class='input-group-prepend'>
+							<span class='input-group-text'>Deuda</span>
+						</div>
+						<input type='text' class='form-control' value='{$deuda}'>
+					</div>
+					<div class='input-group mb-3 col-sm-4'>
+						<div class='input-group-prepend'>
+							<span class='input-group-text'>Saldo a favor</span>
+						</div>
+						<input type='text' class='form-control' value='{$saldoAFavor}'>
+					</div>
+				</div>";
+}
 
-									</div>
-									<div class='container-fluid'>
-										<div class='row'>
-											<div class='col-md-6' id='divCuotas'>
-												DIV CUOTAS
-											</div>
-											<div class='col-md-6' id='divPagos'>
-												DIV PAGOS
-											</div>
-										</div>
-									</div>									
+function generarDivsDeuda($Alumnos){
+    $fechaHoy= date("Y-m-d");
+    $div=	"<br>
+					<div class='container opacidad'>
+						<div class='p-3 mb-2 bg-secondary text-white rounded container '>
+
+							<div class='input-group row'>
+								<div class='col-8' >
+									<span> Consulta Deuda Total </span>
 								</div>
-								<div class='p-3 mb-2 bg-secondary text-white rounded col-12'>
-									<span> botones</span>
-									<input type='checkbox' name='checkActivo' id='checkActivo'>
-									<input type='button' value='Algo'>
-									<input type='button' value='Algo2'>
-								</div>
+								<div class='col-8' >							
+									<button type='button' class='btn btn-default btn-sm' onclick='Test.Imprimir(\"divResultado\")'>
+										<span class='glyphicon glyphicon-print'></span>
+									</button>
+								</div>								
 							</div>							
-						</body>
-				</html>";
+						</div>";
+    $deudaTotal=0;
+    foreach ($Alumnos as $alumno){//recorre alumnos
+        //TODO modificar o crear un nuevo que traiga todos los alums con las cuotas y pagos
+        
+        $todasLasCuotasPagosAlumno=$alumno->TraerCuotasPagos();
+        $saldoAFavor=0;
+        $deuda=0;
+        $arrayDeuda = array();
+        for ($i = 0; $i < count($todasLasCuotasPagosAlumno->cuotas); $i++) {// recoore cuotas alum
+            $cuota = $todasLasCuotasPagosAlumno->cuotas[$i];
+            if($cuota->fecha < $fechaHoy){//chequea vencimiento
+                $importe = $cuota->importe;
+                for ($j = 0; $j < count($todasLasCuotasPagosAlumno->pagos); $j++) { //recorre pagos
+                    $pago = $todasLasCuotasPagosAlumno->pagos[$j];
+                    if ($cuota->concepto == $pago->concepto){//resta imporets
+                        $importe=$importe-$pago->importe;
+                    }
+                }
+                if($importe>0){//acumula si hay deuda
+                    $cuota->importe=$importe;
+                    array_push($arrayDeuda,$cuota);
+                    $deuda=$deuda+$importe;
+                }else{
+                    $saldoAFavor=$saldoAFavor+$importe;
+                }
+            }
+        }
+        if(empty($arrayDeuda)){
+
+        }else{
+            $div.="	<div class='p-1 mb-2 bg-secondary text-white rounded container'>
+									Deuda {$alumno->apellido},{$alumno->nombre},-----Email:{$alumno->email},-----tel:{$alumno->tel}/{$alumno->celular}</span></h5>                  
+								</div>
+								<div class='table table-responsive table-sm '>
+									<table class='table miTable'>
+										<thead>
+											<tr>
+												<th scope='col' class='misTds'>Estado</th>
+												<th scope='col' class='misTds'>Concepto</th>
+												<th scope='col' class='misTds'>Fecha</th>
+												<th scope='col' class='misTds'>Importe</th>								
+											</tr>
+										</thead>
+										<tbody>";
+            for($i=0;$i<count($arrayDeuda);$i++){
+                $div.=  "<tr>
+												<td scope='col' class='misTds' contenteditable='false'>Vencida</td>
+												<td scope='col' class='misTds' contenteditable='false'>".$arrayDeuda[$i]->concepto."</td>
+												<td scope='col' class='misTds' contenteditable='false'>".$arrayDeuda[$i]->fecha."</td>                                                
+												<td scope='col' class='misTds' contenteditable='false'>".$arrayDeuda[$i]->importe."</td>
+											</tr>";
+                $deudaTotal+=$arrayDeuda[$i]->importe;
+            }
+            if($saldoAFavor>0){
+                $div.=  	"<tr>												
+												<th scope='col' class='misTds' contenteditable='false'>Saldo a favor</th>
+												<th scope='col' class='misTds' contenteditable='false'>{$saldoAFavor}</th>												
+												<th scope='col' class='misTds' contenteditable='false'>Deuda</th>
+												<th scope='col' class='misTds' contenteditable='false'>{$deuda}</th>												
+											</tr>";
+            }else{
+
+                $div.=  	"<tr>
+												<th></th>
+												<th></th>
+												<th scope='col' class='misTds' contenteditable='false'>Deuda</th>
+												<th scope='col' class='misTds' contenteditable='false'>{$deuda}</th>												
+											</tr>";
+            }
+            $div.=  "</tbody>										
+									</table>
+								</div>";
+        }
+        unset($arrayDeuda);
+    }
+    $div.=  "<div class='input-group mb-3 col-sm-12'>									
+							<span class='input-group-text'>Total Deuda {$deudaTotal}</span>									
+						</div>
+					</div>";
     return $div;
-
-
 }
 
 ?>

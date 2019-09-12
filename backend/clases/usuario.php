@@ -126,18 +126,13 @@ class Usuario implements IPersona{
         //  ARMO SOLAPAS        
             $grilla2='<div class="container-fluid opacidad" >
                     <h2>Usuarios</h2>
-                    
-
                     <ul class="nav nav-tabs" id="myTab" role="tablist">';
-                        
                     //CARGO TAGS O SOLAPAS DE LA LISTA AGRUPADOS DE A 10
                     if(is_array($usuarios)){
                         $totalDeRegistros=count($usuarios);
                         $cantDeAgrupamiento=10;
                         $cantidadDeTabs=intdiv($totalDeRegistros,$cantDeAgrupamiento);
                         $resto=$totalDeRegistros%$cantDeAgrupamiento;
-                        
-
                         if(count($usuarios)%10 > 0){
                             $cantidadDeTabs++;
                         }
@@ -182,9 +177,7 @@ class Usuario implements IPersona{
                                                 <th scope="col">ACCION</th>
                                             </tr>
                                         </thead>
-                                        <tbody>';   
-        
-        
+                                        <tbody>';
             if(is_array($usuarios)){
             
                 for ($i=0; $i < $cantidadDeTabs; $i++) { 

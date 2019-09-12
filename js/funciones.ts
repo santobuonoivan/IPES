@@ -138,26 +138,119 @@ namespace Test{
             });                
         }
         export function formAdm():void {
-            let pagina = "backend/a/adm";                 
+            let pagina = "backend/a/adm";
 
             //LIMPIO EL CONTENIDO DEL DIV    
             $("#divResultado").html("");
             let tokken = localStorage.getItem('tokken');
-            let datoObjeto = {"tokken": tokken};     
-            $.ajax({
-                type: 'POST',
-                url: pagina,
-                data: datoObjeto,
-                dataType: "html"
-            })
-            .done(function (objHTML:any) {
-                //console.log(objHTML);                
-                $("#divResultado").html(objHTML);
-                Test.cargarDatalist();
-            })
-            .fail(function (jqXHR:any, textStatus:any, errorThrown:any) {
-                alert(jqXHR.responseText + "\n" + textStatus + "\n" + errorThrown);
-            });
+            let formAdm = `
+                <html lang='en'>
+                    <link rel='stylesheet' href='libs/css/style.css'>" +
+                    <body>
+                        <br>
+                        <div class='container-fluid opacidad'><!-- contiene a todo y lo alinea -->
+                            <div class='p-3 mb-2 bg-secondary text-white rounded'>
+                                <h2>Consulta ADM</h2>
+                            </div>
+                            <div class='row opacidad border-1' ><!-- mapea para usarlo como grid -->
+                                <div class='col-5'><!-- div busqueda -->
+                                    <div class='input-group'>
+                                        <div class='input-group-prepend '>
+                                            <span class='input-group-text'>Busque alumno</span>
+                                        </div>
+                                        <input class='form-control' list='inputDataList' id='inputAlumnoSelect' type='text' onchange='Test.cargarDivCuotasPagos()'>
+                                        <datalist id='inputDataList' ></datalist>
+                                    </div>
+                                </div>
+                                <div class='col-6 '><!-- div pluss -->
+                                    <span> pluss</span>
+                                    <input type='checkbox' name='checkActivo' id='checkActivo'>
+                                    <input type='button' value='Deuda Alumno' onclick='Test.GenerarDeudaAlumno()'>
+                                    <input type='button' value='Algo2'>
+                                    <div class='modal fade bd-example-modal-lg' tabindex='-1' role='dialog' aria-labelledby='myLargeModalLabel' aria-hidden='true' id='pop'>
+                                        <div class='modal-content'>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class='col-12'><!-- div info -->
+                                    <div class='row'>
+                                        <div class='input-group col-sm-2'>
+                                            <div class='input-group-prepend '>
+                                                <span class='input-group-text'>Legajo</span>
+                                            </div>
+                                            <input type='text' class='form-control' id='inputLegajo' placeholder='Legajo'>
+                                        </div>
+                                        <div class='input-group col-sm-3'>
+                                            <div class='input-group-prepend'>
+                                                <span class='input-group-text'>Trabajo</span>
+                                            </div>
+                                            <input type='text' class='form-control' id='inputTrabajo' placeholder='Trabajo'>
+                                        </div>
+                                        <div class='input-group col-sm-4'>
+                                            <div class='input-group-prepend'>
+                                                <span class='input-group-text'>Email</span>
+                                            </div>
+                                            <input type='text' class='form-control' id='inputEmail' placeholder='Email'>
+                                        </div>
+                                        <div class='input-group col-sm-3'>
+                                            <div class='input-group-prepend'>
+                                                <span class='input-group-text'>Tel</span>
+                                            </div>
+                                            <input type='text' class='form-control' id='inputTelefono' placeholder='Tel'>
+                                        </div>
+                                        <div class='input-group col-sm-2'>
+                                            <div class='input-group-prepend'>
+                                                <span class='input-group-text'>Dni</span>
+                                            </div>
+                                            <input type='text' class='form-control' id='inputDni' placeholder='D.N.I.'>
+                                        </div>	
+                                        <div class='input-group col-sm-3'>
+                                            <div class='input-group-prepend'>
+                                                <span class='input-group-text'>Cel</span>
+                                            </div>
+                                            <input type='text' class='form-control' id='inputCel' placeholder='Cel'>
+                                        </div>
+                                        <div class='input-group col-sm-4'>
+                                            <div class='input-group-prepend'>
+                                                <span class='input-group-text'>Direccion</span>
+                                            </div>
+                                            <input type='text' class='form-control' id='inputDir' placeholder='Direccion'>
+                                        </div>
+                                        <div class='input-group col-sm-3'>
+                                            <div class='input-group-prepend'>
+                                                <span class='input-group-text'>Fech. Nac.</span>
+                                            </div>
+                                            <input type='date' class='form-control' id='inputFech'>
+                                        </div>											
+                                    </div>
+                                </div>
+                                <div class='input-group col-sm-12' id='divDeudas'>
+                                </div>
+                                <div class='container-fluid'>
+                                    <div class='row'>
+                                        <div class='col-md-6' id='divCuotas'>
+                                            DIV CUOTAS
+                                        </div>
+                                        <div class='col-md-6' id='divPagos'>
+                                            DIV PAGOS
+                                        </div>
+                                    </div>
+                                </div>									
+                            </div>
+                            <div class='p-3 mb-2 bg-secondary text-white rounded col-12'>
+                                <span> botones</span>
+                                <input type='checkbox' name='checkActivo' id='checkActivo'>
+                                <input type='button' value='Algo'>
+                                <input type='button' value='Algo2'>
+                            </div>
+                        </div>							
+                    </body>
+                </html>`;
+        $("#divResultado").html(formAdm);
+        Test.cargarDatalist();
+        }
+
+
             
             
 
