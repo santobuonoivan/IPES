@@ -1,7 +1,8 @@
 <?php
-require_once "./../model/alumno.php";
-require_once "./../servicies/alumno.php";
-require_once "./../../cuotas_pagos/servicies/cuotas_pagos.php";
+
+//require_once __DIR__+"./../model/alumno.php";
+//require_once "./../servicies/alumno.php";
+//equire_once "./../../cuotas_pagos/servicies/cuotas_pagos.php";
 
 
 class ControllerAlumno
@@ -334,6 +335,7 @@ class ControllerAlumno
 			/*************public function modificarCuotasYPagos($cuotasPagos){}******************************************/
 			
 			public static function generarModalCuotasYPagos($cuotasPagos,$nombre,$apellido){
+				//TODO no devería estar por ser una vista
 				$modal="				
 						<div class='modal-dialog modal-lg'>
 							<div class='modal-content'>
@@ -345,10 +347,10 @@ class ControllerAlumno
 									<div class='container-fluid'>
 										<div class='row'>
 											<div class='col-md-6'>";
-												$modal.=Cuotas::generarDivCuotasDeUnAlumno($cuotasPagos->cuotas).
+												$modal.=generarDivCuotasDeUnAlumno($cuotasPagos->cuotas).
 											"</div>
 											<div class='col-md-6'>";
-												$modal.=Pagos::generarDivPagosDeUnAlumno($cuotasPagos->pagos).
+												$modal.=generarDivPagosDeUnAlumno($cuotasPagos->pagos).
 											"</div>
 										</div>
 									</div>								
@@ -429,7 +431,6 @@ class ControllerAlumno
 					$cuotas=Cuotas::generarSQLInsertar($cuotasPagos->cuotas);
 					//cuotas
 					$qwery="INSERT INTO cuotas 	(id_alumno,concepto,fecha,importe) VALUES".$cuotas;
-					//var_dump($qwery);
 					$consulta =$objetoAccesoDato->RetornarConsulta($qwery);					
 					$consulta->execute();					
 					$resultado->insertoCuotas=$objetoAccesoDato->RetornarUltimoIdInsertado();
@@ -440,7 +441,6 @@ class ControllerAlumno
 					$pagos=Pagos::generarSQLInsertar($cuotasPagos->pagos);
 					//pagos
 					$qweryp= "INSERT INTO pagos (id_alumno,concepto,fecha,importe) VALUES ".$pagos;
-					//var_dump($qweryp);
 					$consulta =$objetoAccesoDato->RetornarConsulta($qweryp);					
 					$consulta->execute();					
 					$resultado->insertoPagos=$objetoAccesoDato->RetornarUltimoIdInsertado();

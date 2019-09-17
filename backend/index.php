@@ -5,8 +5,8 @@ use Firebase\JWT\JWT as JWT;
 
 require_once './vendor/autoload.php';
 require_once './clases/AccesoDatos.php';
-require_once './clases/usuario.php';
-require_once './clases/alumno.php';
+require_once './clases/usuario/controller/usuario.php';
+require_once './clases/alumno/controller/alumno.php';
 require_once './clases/carrera.php';
 require_once './clases/entrada.php';
 require_once './clases/salida.php';
@@ -163,7 +163,7 @@ $app = new \Slim\App(["settings" => $config]);
             }
             $usuario = $parametros["usuario"];
             $clave = $parametros["clave"];
-            $objRespuesta = Usuario::VerificarUsuario($usuario,$clave);
+            $objRespuesta = UsuarioController::VerificarUsuario($usuario,$clave);
             if($objRespuesta !=false){
                 $tiempo = time();
                 $datos->id=$objRespuesta->id;

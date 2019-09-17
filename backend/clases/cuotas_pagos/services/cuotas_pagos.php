@@ -1,7 +1,7 @@
 <?php
 
     function generarDivCuotasDeUnAlumno2($vecCuotas){//recibe un vector de cuotas o pagos grid editable,responsive
-    $div = "
+        $div = "
                         <!-- JS -->
                         <script src='https://code.jquery.com/jquery-3.1.1.min.js' ></script>
                         <script src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js' integrity='sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q' crossorigin='anonymous'></script>
@@ -48,36 +48,36 @@
                                     </td>
                                 </tr>";
 
-    for($i=0;$i<count($vecCuotas);$i++){
-        $div.=  "<tr>
-                                    <td scope='col' class='id' contenteditable='false'>".$vecCuotas[$i]->id."</td>
-                                    <td scope='col' class='idAlumno' contenteditable='false'>".$vecCuotas[$i]->id_alumno."</td>                                                
-                                    <td scope='col' class='misTds' contenteditable='true'>".$vecCuotas[$i]->concepto."</td>";
-        $div.=      "<td scope='col' class='misTds' contenteditable='true'>".$vecCuotas[$i]->fecha."</td>";
-        $div.=      "<td scope='col' class='misTds' contenteditable='true'>".$vecCuotas[$i]->importe."</td>
-                                    <td>
-                                        <span class='table1-remove glyphicon glyphicon-remove'></span>
-                                    </td>
-                                    <td>
-                                        <span class='table1-up glyphicon glyphicon-arrow-up'></span>
-                                        <span class='table1-down glyphicon glyphicon-arrow-down'></span>
-                                    </td>
-                                    <td>
-                                        <span class='table1-check glyphicon glyphicon glyphicon-ok'></span>                                        
-                                    </td>
-                                </tr>";
+        for($i=0;$i<count($vecCuotas);$i++){
+            $div.=  "<tr>
+                                        <td scope='col' class='id' contenteditable='false'>".$vecCuotas[$i]->id."</td>
+                                        <td scope='col' class='idAlumno' contenteditable='false'>".$vecCuotas[$i]->id_alumno."</td>                                                
+                                        <td scope='col' class='misTds' contenteditable='true'>".$vecCuotas[$i]->concepto."</td>";
+            $div.=      "<td scope='col' class='misTds' contenteditable='true'>".$vecCuotas[$i]->fecha."</td>";
+            $div.=      "<td scope='col' class='misTds' contenteditable='true'>".$vecCuotas[$i]->importe."</td>
+                                        <td>
+                                            <span class='table1-remove glyphicon glyphicon-remove'></span>
+                                        </td>
+                                        <td>
+                                            <span class='table1-up glyphicon glyphicon-arrow-up'></span>
+                                            <span class='table1-down glyphicon glyphicon-arrow-down'></span>
+                                        </td>
+                                        <td>
+                                            <span class='table1-check glyphicon glyphicon glyphicon-ok'></span>                                        
+                                        </td>
+                                    </tr>";
+        }
+        $div.=  "</tbody>
+                            </table>
+                        </div>
+                        <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+                        <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js'></script>
+                        <script src='http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js'></script>
+                        <script src='libs/js/index.js'></script>";
+
+        return $div;
+
     }
-    $div.=  "</tbody>
-                        </table>
-                    </div>
-                    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
-                    <script src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js'></script>
-                    <script src='http://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore.js'></script>
-                    <script src='libs/js/index.js'></script>";
-
-    return $div;
-
-}
 
     function generarDivPagosDeUnAlumno2($vecPagos){//recibe un vector de cuotas o pagos grid editable,responsive
         $div = "<!-- JS -->
@@ -153,9 +153,19 @@
                             <script src='libs/js/index2.js'></script>";
         return $div;
     }
+    function generarSQLInsertar($vecPagos){//recibe un vector de cuotas o pagos
+        $pagos="";
+        for ($i=0; $i < count($vecPagos); $i++) { 
+            if($i!=(count($vecPagos)-1)){
+                $pagos.="({$vecPagos[$i]->id_alumno},'{$vecPagos[$i]->concepto}','{$vecPagos[$i]->fecha}',{$vecPagos[$i]->importe}),";
+            }else {
+                $pagos.="({$vecPagos[$i]->id_alumno},'{$vecPagos[$i]->concepto}','{$vecPagos[$i]->fecha}',{$vecPagos[$i]->importe})";
+            }    
+        }
+        return $pagos;
+    }
 
-
-function generarSQLInsertarModificar($vecCuotas){//recibe un vector de cuotas o pagos
+    function generarSQLInsertarModificar($vecCuotas){//recibe un vector de cuotas o pagos
         $cuotas="";
         for ($i=0; $i < count($vecCuotas); $i++) {
             if($i!=(count($vecCuotas)-1)){

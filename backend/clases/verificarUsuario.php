@@ -1,12 +1,12 @@
 <?php
     require_once "../clases/iPersona.php";
-    require_once "../clases/usuario.php";    
+    require_once "../clases/usuario/controller/usuario.php";    
    
 
     //var_dump($_POST);
     $uss=isset($_POST['usuario'])? $_POST['usuario'] : NULL;
     $clave=isset($_POST['clave'])? $_POST['clave'] : NULL;
-    $Usuario =Usuario::VerificarUsuario($usuario,$clave);    
+    $Usuario =UsuarioController::VerificarUsuario($usuario,$clave);    
     
     if ($Usuario!=false) {
         //echo "Usuario logueado!!";

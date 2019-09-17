@@ -1,7 +1,6 @@
 ///<reference path="../libs/jqueryTS/index.d.ts"/>
 ///<reference path="../libs/chartsTS/charts.d.ts"/>
 
-namespace Test{
     
     
     /********************************************** GRILLAS *************************************************/    
@@ -21,9 +20,7 @@ namespace Test{
                 data: datoObjeto,
                 dataType: "html"
             })
-            .done(function (objHTML:any) {
-                
-                
+            .done(function (objHTML:any) {    
                 $("#divResultado").html(objHTML);
             })
             .fail(function (jqXHR:any, textStatus:any, errorThrown:any) {

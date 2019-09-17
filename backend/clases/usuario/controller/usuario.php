@@ -1,86 +1,34 @@
 <?php
-require_once "iPersona.php";
+//require_once "iPersona.php";
+//require_once __DIR__+"./../model/usuario.php";
 
 
-class Usuario implements IPersona{
+class UsuarioController /*implements IPersona*/{
 
-    public $usuario_id;    
-    public $apellido;
-    public $nombre;
-    public $dni;
-    public $clave;
-    public $usuario;
-
-    //nuevo
-    public $fechadecumpleanios;
-    public $email;
-    public $perfil;
-    public $turno;
-    public $tel;
-    public $celular;
-    public $direccion1;
-    public $direccion2;
-    public $provincia;
-    public $ciudad;
-    public $codigopostal;
-    public $is_active;
-    public $profile_image;
-    public $country;
-
-
-    function ToJSON(){
-        return json_encode($this);
-    }
+   
 /* inicio funciones especiales para slimFramework*/
     public  function TraerUno($request, $response, $args) {
         $argumentos=$request->getParsedBody();
         $filtro=$argumentos['filtro'];
-        //echo $filtro;
-        $elUsuario=Usuario::TraerUnUsuario($filtro);
-        $newResponse = Usuario::generarDivUsuario($elUsuario);
+        $elUsuario=UsuarioController::TraerUnUsuario($filtro);
+        $newResponse = UsuarioController::generarDivUsuario($elUsuario);
         return $newResponse;
     }
     public  function TraerTodos($request, $response, $args) { 
         
-        $todosLosUsuarios=Usuario::TraerTodoLosUsuarios();
-        $newResponse = Usuario::generarDivUsuario($todosLosUsuarios);  
+        $todosLosUsuarios=UsuarioController::TraerTodoLosUsuarios();
+        $newResponse = UsuarioController::generarDivUsuario($todosLosUsuarios);  
         return $newResponse;
     }
     public  function CargarUno($request, $response, $args) {
-        //$response->getBody()->write("<h1>Cargar uno nuevo</h1>");
-        $ArrayDeParametros = $request->getParsedBody();
-        //var_dump($ArrayDeParametros);    	
-        $miUsuario = new Usuario();
-        
-        $miUsuario->nombre=$ArrayDeParametros['nombre'];
-        $miUsuario->apellido=$ArrayDeParametros['apellido'];
-        $miUsuario->clave=$ArrayDeParametros['clave'];
-        $miUsuario->usuario=$ArrayDeParametros['usuario'];        
-        $miUsuario->dni=$ArrayDeParametros['dni'];
-
-        $miUsuario->fechadecumpleanios=$ArrayDeParametros['fechadecumpleanios'];
-        $miUsuario->email=$ArrayDeParametros['email'];
-        $miUsuario->perfil=$ArrayDeParametros['perfil'];
-        $miUsuario->turno=$ArrayDeParametros['turno'];        
-        $miUsuario->tel=$ArrayDeParametros['tel'];
-        $miUsuario->celular=$ArrayDeParametros['celular'];
-        $miUsuario->direccion1=$ArrayDeParametros['direccion1'];
-        $miUsuario->direccion2=$ArrayDeParametros['direccion2'];
-        $miUsuario->provincia=$ArrayDeParametros['provincia'];
-        $miUsuario->ciudad=$ArrayDeParametros['ciudad'];        
-        $miUsuario->codigopostal=$ArrayDeParametros['codigopostal'];      
-        
-
-        $resultado =$miUsuario->InsertarElUsuario();
-        
-        return $resultado;
-        
+        $arrayDeParametros = $request->getParsedBody();
+        $miUsuario = new Usuario( $arrayDeParametros );
+        $resultado =$miUsuario->InsertarElUsuario();    
+        return $resultado;    
     }
     public  function BorrarUno($request, $response, $args) {
         $ArrayDeParametros = $request->getParsedBody();
-        $usuario_id=$ArrayDeParametros['id'];
-        $Usuario= new Usuario();
-        $Usuario->usuario_id=$usuario_id;
+        $Usuario= new Usuario($ArrayDeParametros);
         $cantidadDeBorrados=$Usuario->BorrarUsuario();
 
         $objDelaRespuesta= new stdclass();
@@ -96,25 +44,7 @@ class Usuario implements IPersona{
     public  function ModificarUno($request, $response, $args) {
         $ArrayDeParametros = $request->getParsedBody();
         //var_dump($ArrayDeParametros);    	
-        $miUsuario = new Usuario();
-        $miUsuario->usuario_id=$ArrayDeParametros['id'];
-        $miUsuario->nombre=$ArrayDeParametros['nombre'];
-        $miUsuario->apellido=$ArrayDeParametros['apellido'];
-        $miUsuario->clave=$ArrayDeParametros['clave'];
-        $miUsuario->usuario=$ArrayDeParametros['usuario'];        
-        $miUsuario->dni=$ArrayDeParametros['dni'];
-        $miUsuario->fechadecumpleanios=$ArrayDeParametros['fechadecumpleanios'];
-        $miUsuario->email=$ArrayDeParametros['email'];
-        $miUsuario->perfil=$ArrayDeParametros['perfil'];
-        $miUsuario->turno=$ArrayDeParametros['turno'];        
-        $miUsuario->tel=$ArrayDeParametros['tel'];
-        $miUsuario->celular=$ArrayDeParametros['celular'];
-        $miUsuario->direccion1=$ArrayDeParametros['direccion1'];
-        $miUsuario->direccion2=$ArrayDeParametros['direccion2'];
-        $miUsuario->provincia=$ArrayDeParametros['provincia'];
-        $miUsuario->ciudad=$ArrayDeParametros['ciudad'];        
-        $miUsuario->codigopostal=$ArrayDeParametros['codigopostal'];
-
+        $miUsuario = new Usuario( $ArrayDeParametros );        
         $resultado =$miUsuario->ModificarUsuario();
         $objDelaRespuesta= new stdclass();
         $objDelaRespuesta->resultado=$resultado;
@@ -461,7 +391,7 @@ class Usuario implements IPersona{
         return $UsuarioBuscado;            
     }
     public static function VerificarUsuario($unUsuario,$unaClave){
-        $usuarios=Usuario::TraerTodoLosUsuarios();
+        $usuarios=UsuarioController::TraerTodoLosUsuarios();
         foreach ($usuarios as $uss)
             if($uss->clave == $unaClave && $uss->usuario ==$unUsuario){
                 return $uss; 
