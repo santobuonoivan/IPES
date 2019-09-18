@@ -62,11 +62,11 @@ $app = new \Slim\App(["settings" => $config]);
     $app->group('/uss', function () {   
 
         
-        $this->post('/filtro', \Usuario::class . ':traerUno');
-        $this->post('/todos',\Usuario::class . ':traerTodos');
-        $this->post('/',\Usuario::class . ':CargarUno');
-        $this->delete('/', \Usuario::class . ':BorrarUno');
-        $this->put('/', \Usuario::class . ':ModificarUno');
+        $this->post('/filtro', \UsuarioController::class . ':traerUno');
+        $this->post('/todos',\UsuarioController::class . ':traerTodos');
+        $this->post('/',\UsuarioController::class . ':CargarUno');
+        $this->delete('/', \UsuarioController::class . ':BorrarUno');
+        $this->put('/', \UsuarioController::class . ':ModificarUno');
 
 
     })/*->add($verificarToken)*/;
